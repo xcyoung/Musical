@@ -198,6 +198,7 @@ deps.spinkit = 'com.github.ybq:Android-SpinKit:1.1.0'
 deps.bottom_navigation_view_ex = 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
 deps.rxpermissions = 'com.github.tbruyelle:rxpermissions:0.10.2'
 deps.android_shape_imageview = 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+deps.exoplayer = 'com.google.android.exoplayer:exoplayer:2.9.0'
 
 ext.deps = deps
 

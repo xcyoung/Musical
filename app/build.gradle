@@ -37,4 +37,6 @@ dependencies {
 
     //timber
     implementation deps.timber
+    //exoplayer
+    api deps.exoplayer
 }

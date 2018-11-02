@@ -1,42 +1,62 @@
 package com.xcyoung.musical.player
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import com.xcyoung.cyberframe.Lib
 import com.xcyoung.musical.MEDIA_VOLUME
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
-
-
-
-
 
 /**
  * @author ChorYeung
  * @since 2018/11/2
  */
-abstract class PlayerAdapter() {
+abstract class PlayerAdapter(val context: Context) {
     private var isPlayOnFocus =false                            //用于控制不同情况下的音频焦点处理
-    private var audioManager:AudioManager
-    init {
-        this.audioManager = Lib.application.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    }
-
+    protected val audioManager:AudioManager = Lib.application.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val audioFocusChange:AudioFocusChange = AudioFocusChange()
+    private val intentFilter:IntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
     private fun play(){
-
+        if(audioFocusChange.requestAudioFocus()){
+            registerNosiyReceiver()
+            onPlay()
+        }
     }
 
     private fun pause(){
-
+        if(!isPlayOnFocus){
+            audioFocusChange.abandonAudioFocus()
+        }
+        unRegisterNosiyReceiver()
+        onPause()
     }
 
     private fun stop(){
+        audioFocusChange.abandonAudioFocus()
+        unRegisterNosiyReceiver()
+        onStop()
+    }
 
+    private fun registerNosiyReceiver(){
+        Lib.application.registerReceiver(audioNosiyReceiver,intentFilter)
+    }
+
+    private fun unRegisterNosiyReceiver(){
+        Lib.application.unregisterReceiver(audioNosiyReceiver)
     }
 
     protected abstract fun isPlaying():Boolean
 
     protected abstract fun setVolume(volume:Float)
+
+    protected abstract fun seekTo(progress:Int)
+
+    protected abstract fun onPlay()
+
+    protected abstract fun onPause()
+
+    protected abstract fun onStop()
 
     /**
      *  监听音频资源是否被抢占的监听器
@@ -90,6 +110,19 @@ abstract class PlayerAdapter() {
 
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                     setVolume(MEDIA_VOLUME.DUCK)
+                }
+            }
+        }
+    }
+
+    /**
+     *  噪音广播监听
+     */
+    private val audioNosiyReceiver= object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if(AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent?.action)){
+                if(isPlaying()){            //此情况符合听歌过程中有外来音频进入的情况（如：有来电）
+                    pause()
                 }
             }
         }
