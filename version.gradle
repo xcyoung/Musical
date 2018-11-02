@@ -1,0 +1,212 @@
+def build_versions = [:]
+build_versions.min_sdk = 21
+build_versions.target_sdk = 28
+build_versions.compile_sdk = 28
+build_versions.version_code = 1
+build_versions.version_name = "1.0"
+ext.build_versions = build_versions
+
+def versions = [:]
+versions.android_gradle_plugin = '3.2.1'
+versions.kotlin = "1.2.61"
+versions.support = "1.0.0"
+versions.espresso = "2.2.2"
+versions.multidex = "1.0.2"
+versions.retrofit2 = "2.4.0"
+versions.rx2 = "2.1.3"
+versions.rxAndroid2 = "2.0.1"
+versions.rxbinding2 = "2.0.0"
+versions.glide = "4.8.0"
+versions.leakcanary = "1.5.4"
+versions.constraint = "1.1.2"
+versions.arch = "2.0.0"
+ext.versions = versions
+
+def deps = [:]
+
+def support = [:]
+support.annotations = "com.android.support:support-annotations:$versions.support"
+support.app_compat = "com.android.support:appcompat-v7:$versions.support"
+support.recyclerview = "com.android.support:recyclerview-v7:$versions.support"
+support.cardview = "com.android.support:cardview-v7:$versions.support"
+support.design = "com.android.support:design:$versions.support"
+support.v4 = "androidx.legacy:legacy-support-v4:$versions.support"
+support.core_utils = "com.android.support:support-core-utils:$versions.support"
+support.customtabs = "com.android.support:customtabs:$versions.support"
+support.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint"
+support.multidex = "com.android.support:multidex:$versions.multidex"
+support.exifinterface = "com.android.support:exifinterface:$versions.support"
+
+def test = [:]
+test.runner = "androidx.test:runner:1.1.0"
+test.espresso_core = "androidx.test.espresso:espresso-core:3.1.0"
+support.test = test
+deps.support = support
+
+def androidArch = [:]
+androidArch.paging = "androidx.paging:paging-runtime:$versions.arch"
+deps.androidArch = androidArch
+
+def lifecycle = [:]
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.arch"
+// ViewModel and LiveData
+lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.arch"
+//just ViewModel
+lifecycle.viewmodel = "androidx.lifecycle:lifecycle-viewmodel:$versions.arch"
+//just LiveData
+lifecycle.livedata = "androidx.lifecycle:lifecycle-livedata:$versions.arch"
+//if using Java8, use the following instead of compiler
+lifecycle.java8 = "androidx.lifecycle:lifecycle-common-java8:$versions.arch"
+lifecycle.compiler = "androidx.lifecycle:lifecycle-compiler:$versions.arch"
+deps.lifecycle = lifecycle
+
+def room = [:]
+room.lib = "androidx.room:room-runtime:$versions.arch"
+room.compiler = "androidx.room:room-compiler:$versions.arch"
+//room.testing = "android.arch.persistence.room:testing:1.0.0"
+room.rxjava2 = "androidx.room:room-rxjava2:$versions.arch"
+room.reactivestreams = "androidx.lifecycle:lifecycle-reactivestreams:$versions.arch"
+room.testing = "androidx.room:room-testing:$versions.arch"
+deps.room = room
+
+def espresso = [:]
+espresso.core = "com.android.support.test.espresso:espresso-core:$versions.espresso"
+espresso.contrib = "com.android.support.test.espresso:espresso-contrib:$versions.espresso"
+espresso.intents = "com.android.support.test.espresso:espresso-intents:$versions.espresso"
+deps.espresso = espresso
+
+def leakcanary = [:]
+leakcanary.op = "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
+leakcanary.no_op = "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakcanary"
+deps.leakcanary = leakcanary
+
+def retrofit2 = [:]
+retrofit2.retrofit = "com.squareup.retrofit2:retrofit:$versions.retrofit2"
+retrofit2.adapter_rxjava2 = "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit2"
+retrofit2.converter_gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit2"
+deps.retrofit2 = retrofit2
+
+def okhttp = [:]
+okhttp.logging = "com.squareup.okhttp3:logging-interceptor:3.3.1"
+okhttp.mockwebserver = "com.squareup.okhttp3:mockwebserver:3.10.0"
+deps.okhttp = okhttp
+
+def rx = [:]
+rx.rxJava2 = "io.reactivex.rxjava2:rxjava:$versions.rx2"
+rx.rxAndroid2 = "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid2"
+rx.rxbinding2 = "com.jakewharton.rxbinding2:rxbinding:$versions.rxbinding2"
+deps.rx = rx
+
+def greendao = [:]
+greendao.lib = "org.greenrobot:greendao:$versions.greendao"
+greendao.plugin = "org.greenrobot:greendao-gradle-plugin:$versions.greendao"
+deps.greendao = greendao
+
+def tencent = [:]
+tencent.xinge = "com.tencent.xinge:xinge:3.1.1-alpha"
+tencent.mid = "com.tencent.mid:mid:3.73-release"
+tencent.mta = "com.qq.mta:mta:3.3.1-release"
+tencent.visual = "com.qq.visual:visual:3.3.1-release"
+tencent.wechat_sdk = "com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0"
+tencent.plugin_res_guard = "com.tencent.mm:AndResGuard-gradle-plugin:1.2.10"
+tencent.bugly = "com.tencent.bugly:crashreport:2.6.6.1"
+tencent.plugin_symtabfileuploader = "com.tencent.bugly:symtabfileuploader:2.1.2"
+tencent.bugly_nativecrashreport = "com.tencent.bugly:nativecrashreport:latest.release"
+deps.tencent = tencent
+
+def umeng = [:]
+umeng.common = "com.umeng.sdk:common:latest.integration"
+umeng.analytics = "com.umeng.sdk:analytics:latest.integration"
+deps.umeng = umeng
+
+def yanzhenjie = [:]
+yanzhenjie.album = "com.yanzhenjie:album:2.1.1"
+yanzhenjie.permission = "com.yanzhenjie:permission:2.0.0-rc12"
+deps.yanzhenjie = yanzhenjie
+
+def solidev = [:]
+solidev.status_view_layout = "me.solidev.library:status-view-layout:0.3.9"
+solidev.auto_loadmore = "me.solidev.library:auto-loadmore:1.0.2"
+deps.solidev = solidev
+
+def facebook = [:]
+facebook.common = "com.facebook.android:facebook-common:$versions.facebook"
+facebook.core = "com.facebook.android:facebook-core:$versions.facebook"
+facebook.login = "com.facebook.android:facebook-login:$versions.facebook"
+facebook.share = "com.facebook.android:facebook-share:$versions.facebook"
+deps.facebook = facebook
+
+def gms = [:]
+gms.plugin = "com.google.gms:google-services:3.1.0"
+gms.services = "com.google.android.gms:play-services:$versions.gms"
+gms.maps = "com.google.android.gms:play-services-maps:$versions.gms"
+gms.places = "com.google.android.gms:play-services-places:$versions.gms"
+deps.gms = gms
+
+def firebase = [:]
+firebase.firebase_core = "com.google.firebase:firebase-core:$versions.gms"
+firebase.firebase_messaging = "com.google.firebase:firebase-messaging:$versions.gms"
+deps.firebase = firebase
+
+def godeye = [:]
+godeye.core = "cn.hikyson.godeye:godeye-core:1.4.0"
+godeye.monitor = "cn.hikyson.godeye:godeye-monitor:1.4.0"
+godeye.monitor_no_op = "cn.hikyson.godeye:godeye-monitor-no-op:1.4.0"
+godeye.toolbox = "cn.hikyson.godeye:godeye-toolbox:1.4.0"
+deps.godeye = godeye
+
+def kotlin = [:]
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+kotlin.lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+kotlin.anko = "org.jetbrains.anko:anko:0.10.5"
+deps.kotlin = kotlin
+
+def aspectj = [:]
+aspectj.plugin="org.aspectj:aspectjtools:1.8.10"
+aspectj.lib="org.aspectj:aspectjrt:1.8.10"
+deps.aspectj = aspectj
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.glide = "com.github.bumptech.glide:glide:$versions.glide"
+deps.glide_compiler = "com.github.bumptech.glide:compiler:$versions.glide"
+deps.debug_db = "com.amitshekhar.android:debug-db:1.0.1"
+deps.timber = 'com.jakewharton.timber:timber:4.7.1'
+deps.wavesidebar = "com.gjiazhe:wavesidebar:1.3"
+deps.tinypinyin = "com.github.promeg:tinypinyin:2.0.3"
+deps.multitype = "me.drakeet.multitype:multitype:3.4.4"
+deps.photo_view = "com.github.chrisbanes:PhotoView:2.1.3"
+deps.imagezoom = "it.sephiroth.android.library.imagezoom:imagezoom:2.3.0"
+deps.toasty = "com.github.GrenderG:Toasty:1.2.5"
+deps.zxing_library = "cn.yipianfengye.android:zxing-library:2.1"
+deps.mp_android_chart = "com.github.PhilJay:MPAndroidChart:v3.0.2"
+deps.spotlight = "com.github.takusemba:spotlight:1.6.0"
+deps.circleimageview = "de.hdodenhof:circleimageview:2.1.0"
+deps.flexibledivider = "com.yqritc:recyclerview-flexibledivider:1.4.0"
+deps.blockcanary = "com.github.markzhai:blockcanary-android:1.5.0"
+deps.smartrefresh = "com.scwang.smartrefresh:SmartRefreshLayout:1.0.4"
+deps.cameraview = "com.otaliastudios:cameraview:1.6.0"
+deps.shape_imageview = "com.github.siyamed:android-shape-imageview:0.9.3@aar"
+deps.round_imageview = "com.makeramen:roundedimageview:2.3.0"
+deps.aliyun_oss_android_sdk = "com.aliyun.dpa:oss-android-sdk:2.8.4"
+deps.tflite = 'org.tensorflow:tensorflow-lite:0.1.7'
+deps.pandora = 'com.github.whataa:pandora:v1.1.4'
+deps.pandora_no_op = 'com.github.whataa:pandora-no-op:v1.1.0'
+deps.badgeview = 'q.rorbin:badgeview:1.1.3'
+deps.prettytime = 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+deps.autosize = 'me.jessyan:autosize:0.9.1'
+deps.spinkit = 'com.github.ybq:Android-SpinKit:1.1.0'
+deps.bottom_navigation_view_ex = 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+deps.rxpermissions = 'com.github.tbruyelle:rxpermissions:0.10.2'
+deps.android_shape_imageview = 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+
+ext.deps = deps
+
+static def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven { url "https://jitpack.io" }
+    handler.maven { url 'http://dl.bintray.com/solid/maven' }
+    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+}
+
+ext.addRepos = this.&addRepos

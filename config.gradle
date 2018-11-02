@@ -1,0 +1,12 @@
+apply from: "version.gradle"
+ext{
+    template = {}
+    template.moudle = {}
+    template.moudle.compileSdkVersion = build_versions.compile_sdk
+    template.moudle.defaultConfig = {
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode build_versions.version_code
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
