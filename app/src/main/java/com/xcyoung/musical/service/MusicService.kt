@@ -1,13 +1,14 @@
 package com.xcyoung.musical.service
 
 import android.content.Intent
-import android.media.session.MediaSession
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.xcyoung.musical.player.MusicPlayerAdapter
+import com.xcyoung.musical.player.PlayerAdapter
 
 /**
  * @author ChorYeung
@@ -16,7 +17,7 @@ import androidx.media.MediaBrowserServiceCompat
 class MusicService : MediaBrowserServiceCompat() {
 
     lateinit var mediaSessionCompat : MediaSessionCompat        //媒体会话
-
+    private val playback : PlayerAdapter = MusicPlayerAdapter(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -79,6 +80,7 @@ class MusicService : MediaBrowserServiceCompat() {
             if(mediaMetadataCompat == null) onPrepare()         //如果该值为null说明还没有onPrepare()
 
             //将mediaMetadataCompat设置到播放器
+            playback.playFromMedia(mediaMetadataCompat!!)
         }
 
         //暂停时触发
@@ -95,7 +97,7 @@ class MusicService : MediaBrowserServiceCompat() {
             //设置MediaMetadataCompat
             val mediaId = playList.get(curIndex).description.mediaId          //通过获取mediaId来创建MediaMetadataCompat
             //创建MediaMetadataCompat
-            //mediaMetadataCompat =
+            //mediaMetadataCompat =  可自己创建
             mediaSessionCompat.setMetadata(mediaMetadataCompat)
 
             if (!mediaSessionCompat.isActive) mediaSessionCompat.isActive = true        //激活mediaSessionCompat

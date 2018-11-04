@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
+import android.support.v4.media.MediaMetadataCompat
 import com.xcyoung.cyberframe.Lib
 import com.xcyoung.musical.MEDIA_VOLUME
 
@@ -17,14 +18,14 @@ abstract class PlayerAdapter(val context: Context) {
     protected val audioManager:AudioManager = Lib.application.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private val audioFocusChange:AudioFocusChange = AudioFocusChange()
     private val intentFilter:IntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-    private fun play(){
+    protected fun play(){
         if(audioFocusChange.requestAudioFocus()){
             registerNosiyReceiver()
             onPlay()
         }
     }
 
-    private fun pause(){
+    protected fun pause(){
         if(!isPlayOnFocus){
             audioFocusChange.abandonAudioFocus()
         }
@@ -32,7 +33,7 @@ abstract class PlayerAdapter(val context: Context) {
         onPause()
     }
 
-    private fun stop(){
+    protected fun stop(){
         audioFocusChange.abandonAudioFocus()
         unRegisterNosiyReceiver()
         onStop()
@@ -50,13 +51,17 @@ abstract class PlayerAdapter(val context: Context) {
 
     protected abstract fun setVolume(volume:Float)
 
-    protected abstract fun seekTo(progress:Int)
+    protected abstract fun seekTo(progress:Long)
 
     protected abstract fun onPlay()
 
     protected abstract fun onPause()
 
     protected abstract fun onStop()
+
+    abstract fun playFromMedia(metadata: MediaMetadataCompat)
+
+    abstract fun getCurrentMedia() : MediaMetadataCompat?
 
     /**
      *  监听音频资源是否被抢占的监听器
