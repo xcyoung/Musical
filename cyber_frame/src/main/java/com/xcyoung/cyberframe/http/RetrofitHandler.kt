@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitHandler {
 
-    private lateinit var mOkHttpClient: OkHttpClient
+    private var mOkHttpClient: OkHttpClient?=null
     private val gson : Gson = GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create()
 
     fun setOkHttpClient(mOkHttpClient: OkHttpClient){
@@ -24,7 +24,7 @@ object RetrofitHandler {
         if(mOkHttpClient == null) throw IllegalAccessException("OkhttpClient not set up!!!")
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(mOkHttpClient)
+                .client(mOkHttpClient!!)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(clazz)

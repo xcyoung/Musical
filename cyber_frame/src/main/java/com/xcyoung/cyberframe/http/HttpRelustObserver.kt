@@ -14,10 +14,10 @@ abstract class HttpRelustObserver<T> : ResourceObserver<Response<T>>() {
     }
 
     override fun onNext(t: Response<T>) {
-        if(t.statusCode == StatusCode.SUCCESS){
-            onSuccess(t.resultMap)
+        if(t.code == StatusCode.SUCCESS){
+            onSuccess(t.data)
         }else{
-            onFailed(com.xcyoung.cyberframe.http.Exception(t.statusCode,t.message))
+            onFailed(com.xcyoung.cyberframe.http.Exception(t.code,t.result))
         }
     }
 

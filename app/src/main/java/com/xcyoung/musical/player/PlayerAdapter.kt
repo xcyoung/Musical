@@ -25,7 +25,7 @@ abstract class PlayerAdapter(val context: Context) {
         }
     }
 
-    protected fun pause(){
+    fun pause(){
         if(!isPlayOnFocus){
             audioFocusChange.abandonAudioFocus()
         }
@@ -33,7 +33,7 @@ abstract class PlayerAdapter(val context: Context) {
         onPause()
     }
 
-    protected fun stop(){
+    fun stop(){
         audioFocusChange.abandonAudioFocus()
         unRegisterNosiyReceiver()
         onStop()

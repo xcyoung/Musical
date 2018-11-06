@@ -6,8 +6,12 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.xcyoung.musical.MusicLibrary
 import com.xcyoung.musical.player.MusicPlayerAdapter
+import com.xcyoung.musical.player.PlaybackInfoListener
 import com.xcyoung.musical.player.PlayerAdapter
 
 /**
@@ -17,7 +21,7 @@ import com.xcyoung.musical.player.PlayerAdapter
 class MusicService : MediaBrowserServiceCompat() {
 
     lateinit var mediaSessionCompat : MediaSessionCompat        //媒体会话
-    private val playback : PlayerAdapter = MusicPlayerAdapter(this)
+    private val playback : PlayerAdapter = MusicPlayerAdapter(this,MediaPlayerListener())
 
     override fun onCreate() {
         super.onCreate()
@@ -37,7 +41,10 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-
+        val children = MusicLibrary.metadataList.map { item ->
+            MediaBrowserCompat.MediaItem(item.description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+        }
+        result.sendResult(children as MutableList<MediaBrowserCompat.MediaItem>?)
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
@@ -88,6 +95,7 @@ class MusicService : MediaBrowserServiceCompat() {
         override fun onPause() {
             super.onPause()
             //播放器暂停
+            playback.pause()
         }
 
         //准备时触发
@@ -97,7 +105,7 @@ class MusicService : MediaBrowserServiceCompat() {
             //设置MediaMetadataCompat
             val mediaId = playList.get(curIndex).description.mediaId          //通过获取mediaId来创建MediaMetadataCompat
             //创建MediaMetadataCompat
-            //mediaMetadataCompat =  可自己创建
+            mediaMetadataCompat = MusicLibrary.getMetadata(mediaId!!)
             mediaSessionCompat.setMetadata(mediaMetadataCompat)
 
             if (!mediaSessionCompat.isActive) mediaSessionCompat.isActive = true        //激活mediaSessionCompat
@@ -115,6 +123,7 @@ class MusicService : MediaBrowserServiceCompat() {
         override fun onStop() {
             super.onStop()
             //播放器停止
+            playback.stop()
             mediaSessionCompat.isActive = false
         }
 
@@ -147,5 +156,59 @@ class MusicService : MediaBrowserServiceCompat() {
             mediaMetadataCompat = null
             onPlay()
         }
+    }
+
+    // MediaPlayerAdapter Callback: MediaPlayerAdapter state -> MusicService.
+    inner class MediaPlayerListener : PlaybackInfoListener() {
+
+        private val mServiceManager: ServiceManager
+
+        init {
+            mServiceManager = ServiceManager()
+        }
+
+        override fun onPlaybackStateChange(state: PlaybackStateCompat) {
+            // Report the state to the MediaSession.
+            mediaSessionCompat.setPlaybackState(state)
+
+            // Manage the started state of this service.
+            when (state.state) {
+                PlaybackStateCompat.STATE_PLAYING -> mServiceManager.moveServiceToStartedState(state)
+                PlaybackStateCompat.STATE_PAUSED -> mServiceManager.updateNotificationForPause(state)
+                PlaybackStateCompat.STATE_STOPPED -> mServiceManager.moveServiceOutOfStartedState(state)
+            }
+        }
+
+            inner class ServiceManager {
+                var mServiceInStartedState:Boolean = false
+                fun moveServiceToStartedState(state: PlaybackStateCompat) {
+    //                val notification = mMediaNotificationManager.getNotification(
+    //                        mPlayback.getCurrentMedia(), state, sessionToken)
+
+                    if (!mServiceInStartedState) {
+                        ContextCompat.startForegroundService(
+                                this@MusicService,
+                                Intent(this@MusicService, MusicService::class.java))
+                        mServiceInStartedState = true
+                    }
+
+    //                startForeground(MediaNotificationManager.NOTIFICATION_ID, notification)
+                }
+
+                fun updateNotificationForPause(state: PlaybackStateCompat) {
+                    stopForeground(false)
+    //                val notification = mMediaNotificationManager.getNotification(
+    //                        mPlayback.getCurrentMedia(), state, sessionToken)
+    //                mMediaNotificationManager.getNotificationManager()
+    //                        .notify(MediaNotificationManager.NOTIFICATION_ID, notification)
+                }
+
+                fun moveServiceOutOfStartedState(state: PlaybackStateCompat) {
+                    stopForeground(true)
+                    stopSelf()
+                    mServiceInStartedState = false
+                }
+        }
+
     }
 }

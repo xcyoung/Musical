@@ -7,11 +7,14 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.media.MediaBrowserServiceCompat
 import com.xcyoung.cyberframe.base.BaseViewModel
+import timber.log.Timber
 
 class MediaBrowerViewModel(val context: Context,val serviceClass:Class<out MediaBrowserServiceCompat>) : BaseViewModel() {
-    private var mediaControllerCompat : MediaControllerCompat?=null
+    var mediaControllerCompat : MediaControllerCompat?=null
     private var mediaBrowserCompat : MediaBrowserCompat ?= null
 
     fun onStart(){
@@ -54,21 +57,38 @@ class MediaBrowerViewModel(val context: Context,val serviceClass:Class<out Media
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
             super.onChildrenLoaded(parentId, children)
 
+            children.forEach { mediaItem ->
+                mediaControllerCompat?.addQueueItem(mediaItem.description)
+            }
+
+            mediaControllerCompat?.transportControls!!.prepare()
+////            if(children.isNotEmpty())
+//            mediaControllerCompat?.transportControls!!.play()
         }
     }
 
     val mediaControlCallback = object :MediaControllerCompat.Callback(){
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
+            Timber.i("aab${state}")
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
+            if(metadata == null) return
+            Timber.i("aaa${metadata.description!!.title}")
         }
 
         override fun onSessionDestroyed() {
             super.onSessionDestroyed()
 
+        }
+    }
+
+    class Factory(val context: Context,val serviceClass:Class<out MediaBrowserServiceCompat>) : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return MediaBrowerViewModel(context,serviceClass) as T
         }
     }
 }
