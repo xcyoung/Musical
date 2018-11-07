@@ -57,11 +57,14 @@ class MediaBrowerViewModel(val context: Context,val serviceClass:Class<out Media
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
             super.onChildrenLoaded(parentId, children)
 
-            children.forEach { mediaItem ->
-                mediaControllerCompat?.addQueueItem(mediaItem.description)
+            if(children.isNotEmpty()){
+                children.forEach { mediaItem ->
+                    mediaControllerCompat?.addQueueItem(mediaItem.description)
+                }
+
+                mediaControllerCompat?.transportControls!!.prepare()
             }
 
-            mediaControllerCompat?.transportControls!!.prepare()
 ////            if(children.isNotEmpty())
 //            mediaControllerCompat?.transportControls!!.play()
         }
