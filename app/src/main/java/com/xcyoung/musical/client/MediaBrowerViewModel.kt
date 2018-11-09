@@ -65,15 +65,14 @@ class MediaBrowerViewModel(val context: Context,val serviceClass:Class<out Media
                 mediaControllerCompat?.transportControls!!.prepare()
             }
 
-////            if(children.isNotEmpty())
-//            mediaControllerCompat?.transportControls!!.play()
+
         }
     }
 
     val mediaControlCallback = object :MediaControllerCompat.Callback(){
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
-            Timber.i("aab${state}")
+            Timber.i("aaa${state}")
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {

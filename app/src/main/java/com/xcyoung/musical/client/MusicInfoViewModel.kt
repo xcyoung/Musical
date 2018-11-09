@@ -12,17 +12,17 @@ import com.xcyoung.musical.data.bean.SongList
  * @since 2018/11/6
  */
 class MusicInfoViewModel :BaseViewModel() {
-    val loadMusicLiveData = MutableLiveData<Boolean>()
+    val loadMusicLiveData = MutableLiveData<SongList>()
 
     fun loadSongList(){
         addDisposable(MusicInfoController().loadSongList()
                 .subscribeWith(object : HttpRelustObserver<SongList>(){
                     override fun onSuccess(resultMap: SongList?) {
-                        loadMusicLiveData.value = resultMap != null
+                        loadMusicLiveData.value = resultMap
                     }
 
                     override fun onFailed(exception: Exception) {
-                        loadMusicLiveData.value = false
+
                     }
                 }))
     }

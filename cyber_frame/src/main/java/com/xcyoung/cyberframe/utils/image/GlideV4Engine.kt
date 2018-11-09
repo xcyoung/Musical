@@ -16,7 +16,7 @@ import java.io.File
  * @since 2018/10/31
  */
 object GlideV4Engine : ImageEngine {
-    override fun loadImage(imageView: ImageView, url: String, requestBuilder: RequestBuilder<Drawable>) {
+    override fun loadImage(imageView: ImageView, url: String) {
         Glide.with(imageView.context)
                 .asBitmap()
                 .load(url)
@@ -29,7 +29,7 @@ object GlideV4Engine : ImageEngine {
 
     }
 
-    override fun loadImage(imageView: ImageView, drawableId: Int, requestBuilder: RequestBuilder<Drawable>) {
+    override fun loadImage(imageView: ImageView, drawableId: Int) {
         Glide.with(imageView.context)
                 .asBitmap()
                 .load(drawableId)
@@ -41,7 +41,7 @@ object GlideV4Engine : ImageEngine {
                 .into(imageView)
     }
 
-    override fun loadImage(imageView: ImageView, file: File, requestBuilder: RequestBuilder<Drawable>) {
+    override fun loadImage(imageView: ImageView, file: File) {
         Glide.with(imageView.context)
                 .asBitmap()
                 .load(file)
@@ -53,7 +53,7 @@ object GlideV4Engine : ImageEngine {
                 .into(imageView)
     }
 
-    override fun loadImage(imageView: ImageView, uri: Uri, requestBuilder: RequestBuilder<Drawable>) {
+    override fun loadImage(imageView: ImageView, uri: Uri) {
         Glide.with(imageView.context)
                 .asBitmap()
                 .load(uri)

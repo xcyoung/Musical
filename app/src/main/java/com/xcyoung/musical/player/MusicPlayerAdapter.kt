@@ -6,11 +6,13 @@ import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.xcyoung.musical.MusicLibrary
 import com.xcyoung.musical.service.MusicService
 
 /**
@@ -19,7 +21,7 @@ import com.xcyoung.musical.service.MusicService
  */
 class MusicPlayerAdapter(context: Context,val listener: MusicService.MediaPlayerListener):PlayerAdapter(context) {
     private var curMediaMetadata : MediaMetadataCompat ?= null
-    private val exoPlayer:SimpleExoPlayer by lazy {                   //ExoPlayer播放器
+    private val exoPlayer:SimpleExoPlayer  by lazy {
         ExoPlayerFactory.newSimpleInstance(
                 context,
                 DefaultRenderersFactory(context),
@@ -29,6 +31,7 @@ class MusicPlayerAdapter(context: Context,val listener: MusicService.MediaPlayer
     private var mState = 0
     private var mCurrentMediaPlayedToCompletion = false
     private var mSeekWhileNotPlaying = -1
+
     override fun isPlaying(): Boolean {
         return exoPlayer.playWhenReady
     }
@@ -62,6 +65,23 @@ class MusicPlayerAdapter(context: Context,val listener: MusicService.MediaPlayer
         this.curMediaMetadata = metadata
         playMediaSource(metadata.description.mediaUri)
 //        playMediaSource(Uri.parse("https://api.bzqll.com/music/netease/url?id=486814412&key=579621905"))
+    }
+
+    fun playFromMedia(){
+        val list = MusicLibrary.metadataList
+        val concatenatingMediaSource = ConcatenatingMediaSource()
+
+        // 测量播放带宽，如果不需要可以传null
+        val bandwidthMeter = DefaultBandwidthMeter()
+        // 创建加载数据的工厂
+        val dataSourceFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context,"musical"),bandwidthMeter)
+
+        list.forEach {
+            concatenatingMediaSource.addMediaSource(ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(it.description.mediaUri))
+        }
+
+        exoPlayer.prepare(concatenatingMediaSource)
+        play()
     }
 
     override fun getCurrentMedia(): MediaMetadataCompat? {

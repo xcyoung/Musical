@@ -1,19 +1,6 @@
 package com.xcyoung.musical
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import com.xcyoung.cyberframe.base.BaseActivity
 import com.xcyoung.musical.client.MediaBrowerViewModel
 import com.xcyoung.musical.client.MusicInfoViewModel
@@ -24,13 +11,6 @@ class MainActivity : BaseActivity() {
     private lateinit var mediaBrowerViewModel:MediaBrowerViewModel
     private lateinit var musicInfoViewModel:MusicInfoViewModel
 
-    private val exoPlayer: SimpleExoPlayer by lazy {                   //ExoPlayer播放器
-        ExoPlayerFactory.newSimpleInstance(
-                this,
-                DefaultRenderersFactory(this),
-                DefaultTrackSelector(),
-                DefaultLoadControl())
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,12 +19,12 @@ class MainActivity : BaseActivity() {
 
         musicInfoViewModel = getViewModel(MusicInfoViewModel::class.java)
 
-        musicInfoViewModel.loadMusicLiveData.observe(this, Observer {
-            if(it) mediaBrowerViewModel.onStart()
-            play.isEnabled = it
-        })
+//        musicInfoViewModel.loadMusicLiveData.observe(this, Observer {
+//            if(it) mediaBrowerViewModel.onStart()           //请求接口成功后建立媒体浏览连接 准备播放器
+//            fab.isEnabled = it
+//        })
 
-        play.setOnClickListener { mediaBrowerViewModel.mediaControllerCompat!!.transportControls.play() }
+        fab.setOnClickListener { mediaBrowerViewModel.mediaControllerCompat!!.transportControls.play() }
         stop.setOnClickListener { mediaBrowerViewModel.mediaControllerCompat!!.transportControls.prepare() }
 
 //        playMediaSource(Uri.parse("https://api.bzqll.com/music/netease/url?id=486814412&key=579621905"))
@@ -66,17 +46,5 @@ class MainActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
         mediaBrowerViewModel.onStop()
-    }
-
-    private fun playMediaSource(uri: Uri?):ExtractorMediaSource {
-        // 测量播放带宽，如果不需要可以传null
-        val bandwidthMeter = DefaultBandwidthMeter()
-        // 创建加载数据的工厂
-        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this,"musical"),bandwidthMeter)
-        // 传入Uri、加载数据的工厂、解析数据的工厂，就能创建出MediaSource
-        val audioSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-//        // Prepare
-        exoPlayer.prepare(audioSource)
-        return audioSource
     }
 }

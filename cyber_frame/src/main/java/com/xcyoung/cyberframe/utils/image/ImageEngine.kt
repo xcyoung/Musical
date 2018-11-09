@@ -11,11 +11,11 @@ import java.io.File
  * @since 2018/10/31
  */
 interface ImageEngine {
-    fun loadImage(imageView: ImageView, url: String, requestBuilder: RequestBuilder<Drawable>)
+    fun loadImage(imageView: ImageView, url: String)
 
-    fun loadImage(imageView: ImageView, drawableId: Int,requestBuilder: RequestBuilder<Drawable>)
+    fun loadImage(imageView: ImageView, drawableId: Int)
 
-    fun loadImage(imageView: ImageView, file: File,requestBuilder: RequestBuilder<Drawable>)
+    fun loadImage(imageView: ImageView, file: File)
 
-    fun loadImage(imageView: ImageView, uri: Uri,requestBuilder: RequestBuilder<Drawable>)
+    fun loadImage(imageView: ImageView, uri: Uri)
 }

@@ -1,6 +1,7 @@
 package com.xcyoung.musical.service
 
 import android.content.Intent
+import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -87,7 +88,8 @@ class MusicService : MediaBrowserServiceCompat() {
             if(mediaMetadataCompat == null) onPrepare()         //如果该值为null说明还没有onPrepare()
 
             //将mediaMetadataCompat设置到播放器
-            playback.playFromMedia(mediaMetadataCompat!!)
+//            playback.playFromMedia(mediaMetadataCompat!!)
+            if(playback is MusicPlayerAdapter) playback.playFromMedia()
         }
 
         //暂停时触发
