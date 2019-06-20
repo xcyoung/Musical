@@ -124,11 +124,6 @@ yanzhenjie.album = "com.yanzhenjie:album:2.1.1"
 yanzhenjie.permission = "com.yanzhenjie:permission:2.0.0-rc12"
 deps.yanzhenjie = yanzhenjie
 
-def solidev = [:]
-solidev.status_view_layout = "me.solidev.library:status-view-layout:0.3.9"
-solidev.auto_loadmore = "me.solidev.library:auto-loadmore:1.0.2"
-deps.solidev = solidev
-
 def facebook = [:]
 facebook.common = "com.facebook.android:facebook-common:$versions.facebook"
 facebook.core = "com.facebook.android:facebook-core:$versions.facebook"
